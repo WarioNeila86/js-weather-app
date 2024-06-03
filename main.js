@@ -2,17 +2,27 @@ import "./style.css";
 import { getWeather } from "./weather.js";
 import { ICON_MAP } from "./iconMap.js";
 
-const data = await getWeather(
-  10,
-  10,
-  Intl.DateTimeFormat().resolvedOptions().timeZone
-);
-console.log(data);
-renderWeather(data);
+navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
+
+async function positionSuccess({ coords }) {
+  const data = await getWeather(
+    coords.latitude,
+    coords.longitude,
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  );
+  renderWeather(data);
+}
+
+function positionError() {
+  alert(
+    "There was an error getting your location. Please allow us to use your location and refresh the page."
+  );
+}
 
 function renderWeather({ current, daily, hourly }) {
   renderCurrentWeather(current);
   renderDailyWeather(daily);
+  renderHourlyWeather(hourly);
 }
 
 function renderCurrentWeather(current) {
@@ -41,6 +51,23 @@ function renderDailyWeather(daily) {
   });
 }
 
+function renderHourlyWeather(hourly) {
+  const hourlySection = document.querySelector("[data-hour-section]");
+  const hourRowTemplate = document.getElementById("hour-row-template");
+  hourlySection.innerHTML = "";
+  hourly.forEach((hour) => {
+    const element = hourRowTemplate.content.cloneNode(true);
+    setValue("temp", hour.temp, { parent: element });
+    setValue("fl-temp", hour.feelsLike, { parent: element });
+    setValue("wind", hour.windSpeed, { parent: element });
+    setValue("precip", hour.precip, { parent: element });
+    setValue("day", formatDate(hour.timestamp), { parent: element });
+    setValue("time", formatTime(hour.timestamp), { parent: element });
+    element.querySelector("[data-icon]").src = getIconUrl(hour.iconCode);
+    hourlySection.append(element);
+  });
+}
+
 function setValue(selector, value, { parent = document } = {}) {
   parent.querySelector(`[data-${selector}]`).textContent = value;
 }
@@ -52,4 +79,9 @@ function getIconUrl(iconCode) {
 function formatDate(timestamp) {
   const date = new Date(timestamp * 1000);
   return new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(date);
+}
+
+function formatTime(timestamp) {
+  const date = new Date(timestamp * 1000);
+  return new Intl.DateTimeFormat("en-US", { hour: "numeric" }).format(date);
 }
