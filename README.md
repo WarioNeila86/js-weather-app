@@ -9,7 +9,9 @@
 The application retrieves weather data from [Open-Meteo](https://open-meteo.com/), which is a free weather API that does not require any API keys.
 
 ## Screenshot
-![JS-Weather-App Screenshot](https://github.com/WarioNeila86/js-weather-app/assets/6084473/4f8e1686-c737-491e-a9ec-9768ef8176ba "Click to view full size")
+<a href="https://github.com/WarioNeila86/js-weather-app/assets/6084473/4f8e1686-c737-491e-a9ec-9768ef8176ba" target="_blank" title="Click to view full size">
+  <img src="https://github.com/WarioNeila86/js-weather-app/assets/6084473/4f8e1686-c737-491e-a9ec-9768ef8176ba" alt="JS-Weather-App Screenshot" width="500">
+</a>
 
 ## Features
 - **Current Weather**: Displays the current temperature, weather condition, humidity, wind speed, and more.
