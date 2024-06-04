@@ -11,6 +11,7 @@ async function positionSuccess({ coords }) {
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
   renderWeather(data);
+  document.querySelector("body").classList.remove("blurred");
 }
 
 function positionError() {
