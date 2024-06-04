@@ -77,11 +77,11 @@ function getIconUrl(iconCode) {
 }
 
 function formatDate(timestamp) {
-  const date = new Date(timestamp * 1000);
+  const date = new Date(timestamp);
   return new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(date);
 }
 
 function formatTime(timestamp) {
-  const date = new Date(timestamp * 1000);
+  const date = new Date(timestamp);
   return new Intl.DateTimeFormat("en-US", { hour: "numeric" }).format(date);
 }

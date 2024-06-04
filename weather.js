@@ -74,5 +74,6 @@ function parseHourlyWeather({ hourly, current }) {
         precip: Math.round(hourly.precipitation[index] * 100) / 100,
       };
     })
-    .filter(({ timestamp }) => timestamp >= current.time * 1000);
+    .filter(({ timestamp }) => timestamp >= current.time * 1000)
+    .slice(0, 12);
 }
