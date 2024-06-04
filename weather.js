@@ -1,35 +1,30 @@
-import axios from "axios";
+import axios from 'axios';
 
 // https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum&timeformat=unixtime
 
 export async function getWeather(lat, lon, timezone) {
-  const { data } = await axios.get("https://api.open-meteo.com/v1/forecast", {
+  const {data} = await axios.get('https://api.open-meteo.com/v1/forecast', {
     params: {
       latitude: lat,
       longitude: lon,
       timezone,
-      current: "temperature_2m,weather_code,wind_speed_10m",
-      hourly:
-        "temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m",
+      current: 'temperature_2m,weather_code,wind_speed_10m',
+      hourly: 'temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m',
       daily:
-        "weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum",
-      timeformat: "unixtime"
+        'weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum',
+      timeformat: 'unixtime',
     },
   });
   console.log(data);
   return {
     current: parseCurrentWeather(data),
     daily: parseDailyWeather(data),
-    hourly: parseHourlyWeather(data)
+    hourly: parseHourlyWeather(data),
   };
 }
 
-function parseCurrentWeather({ current, daily }) {
-  const {
-    temperature_2m: currentTemp,
-    wind_speed_10m: windSpeed,
-    weather_code: iconCode,
-  } = current;
+function parseCurrentWeather({current, daily}) {
+  const {temperature_2m: currentTemp, wind_speed_10m: windSpeed, weather_code: iconCode} = current;
 
   const {
     temperature_2m_max: [maxTemp],
@@ -51,7 +46,7 @@ function parseCurrentWeather({ current, daily }) {
   };
 }
 
-function parseDailyWeather({ daily }) {
+function parseDailyWeather({daily}) {
   return daily.time.map((time, index) => {
     return {
       timestamp: time * 1000,
@@ -62,7 +57,7 @@ function parseDailyWeather({ daily }) {
   });
 }
 
-function parseHourlyWeather({ hourly, current }) {
+function parseHourlyWeather({hourly, current}) {
   return hourly.time
     .map((time, index) => {
       return {
@@ -74,6 +69,6 @@ function parseHourlyWeather({ hourly, current }) {
         precip: Math.round(hourly.precipitation[index] * 100) / 100,
       };
     })
-    .filter(({ timestamp }) => timestamp >= current.time * 1000)
+    .filter(({timestamp}) => timestamp >= current.time * 1000)
     .slice(0, 12);
 }
